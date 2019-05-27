@@ -65,6 +65,21 @@ def plot_Xt(Xt):
     plt.ylabel('Nombre de clients')
     plt.show()
 
+def compute_pi(n=N_max):
+    A = createA(n)
+
+    # To avoid nul solution
+    # force last component to be 1 
+    b = -A[:-1, -1]
+    A = A[:-1, :-1]
+
+    pi = np.linalg.solve(A, b)
+    pi = np.append(pi, 1)
+
+    return pi/np.sum(pi)
 
 if __name__ == '__main__':
     print(A)
+    # Xt = trajectory(0, T_max, A)
+    # plot_Xt(Xt)
+    print(compute_pi())
