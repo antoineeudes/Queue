@@ -14,7 +14,7 @@ ro = lbd/mu
 T_max = 10
 N_max = 100
 
-def createA(n):
+def createA(n, lbd=lbd, mu=mu):
     A = np.zeros((n, n))
     for i in range(n-1):
         A[i, i+1] = lbd
@@ -75,8 +75,8 @@ def plot_Xt(T):
     plt.ylabel('Nombre de clients')
     plt.show()
 
-def compute_pi(n=N_max):
-    A = createA(n)
+def compute_pi(n=N_max, lbd=lbd, mu=mu):
+    A = createA(n, lbd=lbd, mu=mu)
 
     # To avoid nul solution
     # force last component to be 1
@@ -89,9 +89,9 @@ def compute_pi(n=N_max):
 
     return pi/np.sum(pi)
 
-def estimate_exp_var(x0=0, n=N_max):
+def estimate_exp_var(x0=0, n=N_max, lbd=lbd, mu=mu):
     # Xt, time = trajectory(T, x0)
-    pi = compute_pi(n=n)
+    pi = compute_pi(n=n, lbd=lbd, mu=mu)
     estimated_exp = np.vdot(pi, np.arange(n))
     estimated_var = np.vdot(pi, [(x-estimated_exp)**2 for x in range(n)])
     expected_exp = ro/(1-ro)
@@ -103,6 +103,26 @@ def estimate_exp_var(x0=0, n=N_max):
     print('Expected variance : {}'.format(expected_var))
 
     return estimated_exp,  estimated_var, expected_exp, expected_var
+
+def influence_of_ro_over_estimation():
+    error_exp = []
+    error_var = []
+    ro_list = []
+    for lbd in np.linspace(0.01, 0.99, 100):
+        print('lbd : {}'.format(lbd))
+        est_exp, est_var, exp_exp, exp_var = estimate_exp_var(lbd=lbd, mu=mu)
+        error_exp.append(abs(est_exp - exp_exp))
+        error_var.append(abs(est_var - exp_var))
+        ro = lbd/mu
+        ro_list.append(ro)
+
+    plt.scatter(ro_list, error_exp, label='Expectancy error')
+    plt.scatter(ro_list, error_var, label='Variance error')
+    plt.xlabel('ro')
+    plt.ylabel('Error')
+    plt.legend()
+    plt.title('Influence of ro over estimation errors')
+    plt.show()
 
 def indicatrice(a, xt):
     if a==xt:
@@ -136,3 +156,4 @@ if __name__ == '__main__':
     # plot_Xt(Xt)
     print(compute_pi())
     print(estimate_exp_var())
+    influence_of_ro_over_estimation()
