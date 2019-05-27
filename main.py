@@ -6,15 +6,15 @@ from numpy import linalg as LA
 # Parameters
 delta = 0.5
 K = 1
-lbd = 1
-mu = 1
+lbd = 1.
+mu = 1.
 N_max = 10
 
 def createA(n):
     A = np.zeros((n, n))
     for i in range(n-1):
         A[i, i+1] = lbd
-        A[i+1, i+2] = min(i+1, K)*mu
+        A[i+1, i] = min(i+1, K)*mu
     for i in range(n):
         A[i, i] = -(lbd + min(i, K)*mu)
         
@@ -31,17 +31,25 @@ def step_trajectory(x):
     return next_state
 
 
-def trajectory(x0, t):
-    Xt = np.zeros(math.floor(t/delta))
-    incoming_queue = np.random.exponential(lbd, np.floor(t/delta))
-    out_queue = np.random.exponential(lbd, np.floor(t/mu))
-    for i in range(math.floor(1./delta*t)):
+def trajectory(t, x0=0):
+    Xt = np.zeros(int(np.floor(t/delta)))
+    x = x0
+    for i in range(int(np.floor(t/delta))):
         Xt[i] = x
-        x = x + incoming_queue[i] - out_queue[i]
+        if x == 0:
+            x = 1
+        else:
+            u = random.random()
+            if u < lbd/(lbd+mu):
+                x += 1
+            else:
+                x -= 1
     return Xt
 
 
 
 
 
-A = createA(n_max) 
+A = createA(N_max) 
+
+print(trajectory(5))
