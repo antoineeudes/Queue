@@ -7,11 +7,12 @@ from numpy import linalg as LA
 # Parameters
 delta = 0.5
 K = 1
-lbd = 1
+lbd = 0.7
 mu = 1
+ro = lbd/mu
 
 T_max = 10
-N_max = 10
+N_max = 100
 
 def createA(n):
     A = np.zeros((n, n))
@@ -69,7 +70,8 @@ def compute_pi(n=N_max):
     A = createA(n)
 
     # To avoid nul solution
-    # force last component to be 1 
+    # force last component to be 1
+    A = np.transpose(A) 
     b = -A[:-1, -1]
     A = A[:-1, :-1]
 
@@ -78,8 +80,15 @@ def compute_pi(n=N_max):
 
     return pi/np.sum(pi)
 
+def estimate_expectancy(x0=0, n=N_max):
+    # Xt, time = trajectory(T, x0)
+    pi = compute_pi(n=n)
+    return np.vdot(pi, np.arange(n))
+
 if __name__ == '__main__':
     print(A)
     # Xt = trajectory(0, T_max, A)
     # plot_Xt(Xt)
     print(compute_pi())
+    print(estimate_expectancy())
+    print(ro/(1-ro))
