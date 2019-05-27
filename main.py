@@ -34,8 +34,6 @@ def createP(n, lbd=lbd, mu=mu):
     return P
 
 A = createA(N_max)
-P = createP(N_max)
-
 
 def step_trajectory(x):
     u = random.rand()
@@ -170,15 +168,17 @@ def plot_dist_customer_n(n, N_max=N_max, lbd=lbd, mu=mu):
     dist_n = np.dot(Pn, dist_0)
 
     plt.plot(range(N_max), dist_n)
+    plt.xlabel('Queue length')
+    plt.ylabel('Probability')
+    plt.title('Distribution of the queue length')
     plt.show()
 
 if __name__ == '__main__':
     # print(A)
-    print(P)
     # plot_Xt(10)
     # Xt = trajectory(0, T_max, A)
     # plot_Xt(Xt)
     # print(compute_pi())
     # print(estimate_exp_var(show=True))
     # influence_of_ro_over_estimation()
-    plot_dist_customer_n(10)
+    plot_dist_customer_n(20)
