@@ -118,8 +118,8 @@ def influence_of_ro_over_estimation():
     error_exp = []
     error_var = []
     ro_list = []
-    for lbd in np.linspace(0.01, 0.99, 10):
-        for mu in np.linspace(0.01, 0.99, 10):
+    for lbd in np.linspace(0.01, 0.99, 30):
+        for mu in np.linspace(0.01, 0.99, 30):
             ro = lbd/mu
             if ro >= 1:
                 continue
@@ -128,8 +128,8 @@ def influence_of_ro_over_estimation():
             error_var.append(abs(est_var - exp_var))
             ro_list.append(ro)
 
-    plt.scatter(ro_list, error_exp, label='Expectancy error')
-    plt.scatter(ro_list, error_var, label='Variance error')
+    plt.scatter(ro_list, error_exp, label='Expectancy error', s=20)
+    plt.scatter(ro_list, error_var, label='Variance error', s=20)
     plt.xlabel('ro')
     plt.ylabel('Error')
     plt.legend()
@@ -180,5 +180,9 @@ if __name__ == '__main__':
     # plot_Xt(Xt)
     # print(compute_pi())
     # print(estimate_exp_var(show=True))
-    # influence_of_ro_over_estimation()
+
+    # QUESTION 2
+    influence_of_ro_over_estimation()
+
+    # QUESTION 4
     plot_dist_customer_n(20)
