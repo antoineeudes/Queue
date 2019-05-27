@@ -13,7 +13,7 @@ mu = 1
 T_max = 10
 N_max = 10
 
-def create_A(n):
+def createA(n):
     A = np.zeros((n, n))
     for i in range(n-1):
         A[i, i+1] = lbd
@@ -57,8 +57,6 @@ def trajectory(T, x0=0):
 
 A = createA(N_max) 
 
-
-A = createA(N_max)
 def plot_Xt(Xt):
     n, = Xt.shape
     X = delta*np.arange(n)
@@ -67,7 +65,6 @@ def plot_Xt(Xt):
     plt.ylabel('Nombre de clients')
     plt.show()
 
-A = create_A(N_max)
 
 if __name__ == '__main__':
     print(A)
