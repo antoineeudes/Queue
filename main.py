@@ -1,6 +1,7 @@
 import numpy as np
 import random
 import math
+from numpy import linalg as LA
 
 # Parameters
 delta = 0.5
@@ -20,9 +21,7 @@ def createA(n):
     return A
 
 
-def step_trajectory(x, A=None):
-    if A==None:
-        A = createA()
+def step_trajectory(x):
     u = random.rand()
     prob = A[x,:]
     cumulated_density = np.cumsum(prob)
@@ -32,14 +31,17 @@ def step_trajectory(x, A=None):
     return next_state
 
 
-def trajectory(x0, t, A=None):
-    Xt = np.zeros(t)
+def trajectory(x0, t):
+    Xt = np.zeros(math.floor(t/delta))
+    incoming_queue = np.random.exponential(lbd, np.floor(t/delta))
+    out_queue = np.random.exponential(lbd, np.floor(t/mu))
     for i in range(math.floor(1./delta*t)):
         Xt[i] = x
-        x = step_trajectory(x, A)
+        x = x + incoming_queue[i] - out_queue[i]
     return Xt
 
 
 
 
-A = createA(N_max)
+
+A = createA(n_max) 
