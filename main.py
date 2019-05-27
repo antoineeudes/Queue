@@ -57,9 +57,8 @@ def trajectory(T, x0=0):
 
 A = createA(N_max) 
 
-def plot_Xt(Xt):
-    n, = Xt.shape
-    X = delta*np.arange(n)
+def plot_Xt(T):
+    Y, X = trajectory(T)
     plt.plot(X, Y)
     plt.xlabel('t')
     plt.ylabel('Nombre de clients')
@@ -68,3 +67,4 @@ def plot_Xt(Xt):
 
 if __name__ == '__main__':
     print(A)
+    plot_Xt(10)
