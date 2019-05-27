@@ -31,20 +31,25 @@ def step_trajectory(x):
     return next_state
 
 
-def trajectory(t, x0=0):
-    Xt = np.zeros(int(np.floor(t/delta)))
+def trajectory(T, x0=0):
+    Xt = np.array([])
+    t = 0
     x = x0
-    for i in range(int(np.floor(t/delta))):
-        Xt[i] = x
+    time = np.array([])
+    while t<T:
+        Xt = np.append(Xt, x)
+        time = np.append(time, t)
         if x == 0:
             x = 1
+            t += np.random.exponential(lbd)
         else:
             u = random.random()
             if u < lbd/(lbd+mu):
                 x += 1
             else:
                 x -= 1
-    return Xt
+            t += np.random.exponential(lbd+mu)
+    return Xt, time
 
 
 
@@ -52,4 +57,4 @@ def trajectory(t, x0=0):
 
 A = createA(N_max) 
 
-print(trajectory(5))
+print(trajectory(10))
