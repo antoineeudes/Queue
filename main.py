@@ -24,6 +24,19 @@ def createA(n, lbd=lbd, mu=mu):
 
     return A
 
+def createP(n, lbd=lbd, mu=mu):
+    P = np.zeros((n, n))
+
+    for i in range(n):
+        for j in range(min(i+2, n)):
+            P[i, j] = mu**(i-j+1)/(lbd+mu)**(i-j+1)*(int(j==0)+lbd/(lbd+mu)*(int(j>0)))
+
+    return P
+
+
+A = createA(N_max)
+P = createP(N_max)
+
 
 def step_trajectory(x):
     u = random.rand()
@@ -56,7 +69,6 @@ def trajectory(T, x0=0):
     return Xt, time
 
 
-A = createA(N_max)
 
 def plot_Xt(T):
     Xt, time = trajectory(T)
@@ -89,7 +101,7 @@ def compute_pi(n=N_max, lbd=lbd, mu=mu):
 
     return pi/np.sum(pi)
 
-def estimate_exp_var(x0=0, n=N_max, lbd=lbd, mu=mu):
+def estimate_exp_var(x0=0, n=N_max, lbd=lbd, mu=mu, show=False):
     # Xt, time = trajectory(T, x0)
     pi = compute_pi(n=n, lbd=lbd, mu=mu)
     estimated_exp = np.vdot(pi, np.arange(n))
@@ -97,10 +109,11 @@ def estimate_exp_var(x0=0, n=N_max, lbd=lbd, mu=mu):
     expected_exp = ro/(1-ro)
     expected_var = ro/(1-ro)**2
 
-    print('Estimated expectancy : {}'.format(estimated_exp))
-    print('Expected expectancy : {}'.format(expected_exp))
-    print('Estimated variance : {}'.format(estimated_var))
-    print('Expected variance : {}'.format(expected_var))
+    if show:
+        print('Estimated expectancy : {}'.format(estimated_exp))
+        print('Expected expectancy : {}'.format(expected_exp))
+        print('Estimated variance : {}'.format(estimated_var))
+        print('Expected variance : {}'.format(expected_var))
 
     return estimated_exp,  estimated_var, expected_exp, expected_var
 
@@ -108,13 +121,15 @@ def influence_of_ro_over_estimation():
     error_exp = []
     error_var = []
     ro_list = []
-    for lbd in np.linspace(0.01, 0.99, 100):
-        print('lbd : {}'.format(lbd))
-        est_exp, est_var, exp_exp, exp_var = estimate_exp_var(lbd=lbd, mu=mu)
-        error_exp.append(abs(est_exp - exp_exp))
-        error_var.append(abs(est_var - exp_var))
-        ro = lbd/mu
-        ro_list.append(ro)
+    for lbd in np.linspace(0.01, 0.99, 10):
+        for mu in np.linspace(0.01, 0.99, 10):
+            ro = lbd/mu
+            if ro >= 1:
+                continue
+            est_exp, est_var, exp_exp, exp_var = estimate_exp_var(lbd=lbd, mu=mu)
+            error_exp.append(abs(est_exp - exp_exp))
+            error_var.append(abs(est_var - exp_var))
+            ro_list.append(ro)
 
     plt.scatter(ro_list, error_exp, label='Expectancy error')
     plt.scatter(ro_list, error_var, label='Variance error')
@@ -155,5 +170,5 @@ if __name__ == '__main__':
     # Xt = trajectory(0, T_max, A)
     # plot_Xt(Xt)
     print(compute_pi())
-    print(estimate_exp_var())
+    print(estimate_exp_var(show=True))
     influence_of_ro_over_estimation()
