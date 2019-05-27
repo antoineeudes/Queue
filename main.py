@@ -33,7 +33,6 @@ def createP(n, lbd=lbd, mu=mu):
 
     return P
 
-
 A = createA(N_max)
 P = createP(N_max)
 
@@ -162,13 +161,24 @@ def density_Xt(x, t=1000):
 #     plt.show()
 
 
+def plot_dist_customer_n(n, N_max=N_max, lbd=lbd, mu=mu):
+    P = createP(N_max)
+    Pn = np.linalg.matrix_power(P, n)
+    dist_0 = np.zeros(N_max)
+    dist_0[0] = 1.
 
+    dist_n = np.dot(Pn, dist_0)
+
+    plt.plot(range(N_max), dist_n)
+    plt.show()
 
 if __name__ == '__main__':
-    print(A)
+    # print(A)
+    print(P)
     # plot_Xt(10)
     # Xt = trajectory(0, T_max, A)
     # plot_Xt(Xt)
-    print(compute_pi())
-    print(estimate_exp_var(show=True))
-    influence_of_ro_over_estimation()
+    # print(compute_pi())
+    # print(estimate_exp_var(show=True))
+    # influence_of_ro_over_estimation()
+    plot_dist_customer_n(10)
