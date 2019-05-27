@@ -79,23 +79,25 @@ def compute_pi(n=N_max):
 
     return pi/np.sum(pi)
 
-def estimate_expectancy(x0=0, n=N_max):
+def estimate_exp_var(x0=0, n=N_max):
     # Xt, time = trajectory(T, x0)
     pi = compute_pi(n=n)
-    expectancy = np.vdot(pi, np.arange(n))
-    variance = np.vdot(pi, [(x-expectancy)**2 for x in range(n)])
+    estimated_exp = np.vdot(pi, np.arange(n))
+    estimated_var = np.vdot(pi, [(x-estimated_exp)**2 for x in range(n)])
+    expected_exp = ro/(1-ro)
+    expected_var = ro/(1-ro)**2
 
-    print('Estimated expectancy : {}'.format(expectancy))
-    print('Expected expectancy : {}'.format(ro/(1-ro)))
-    print('Estimated variance : {}'.format(variance))
-    print('Expected variance : {}'.format(ro/(1-ro)**2))
-    return expectancy, variance
+    print('Estimated expectancy : {}'.format(estimated_exp))
+    print('Expected expectancy : {}'.format(expected_exp))
+    print('Estimated variance : {}'.format(estimated_var))
+    print('Expected variance : {}'.format(expected_var))
+
+    return estimated_exp,  estimated_var, expected_exp, expected_var
 
 if __name__ == '__main__':
     print(A)
-    plot_Xt(10)
-
+    # plot_Xt(10)
     # Xt = trajectory(0, T_max, A)
     # plot_Xt(Xt)
     print(compute_pi())
-    print(estimate_expectancy())
+    print(estimate_exp_var())
