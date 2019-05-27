@@ -52,9 +52,6 @@ def trajectory(T, x0=0):
     return Xt, time
 
 
-
-
-
 A = createA(N_max) 
 
 print(trajectory(10))
