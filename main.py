@@ -8,7 +8,7 @@ from numpy import linalg as LA
 delta = 0.5
 K = 1
 lbd = 0.7
-mu = 1
+mu = 1.
 ro = lbd/mu
 
 T_max = 10
@@ -21,7 +21,7 @@ def createA(n):
         A[i+1, i] = min(i+1, K)*mu
     for i in range(n):
         A[i, i] = -(lbd + min(i, K)*mu)
-        
+
     return A
 
 
@@ -56,11 +56,21 @@ def trajectory(T, x0=0):
     return Xt, time
 
 
-A = createA(N_max) 
+A = createA(N_max)
 
 def plot_Xt(T):
-    Y, X = trajectory(T)
-    plt.plot(X, Y)
+    Xt, time = trajectory(T)
+    X, Y = [], []
+    X.append(Xt[0])
+    Y.append(time[0])
+    Y.append(time[1])
+    for i in range(1, len(Xt)-1):
+        X.append(Xt[i-1])
+        X.append(Xt[i])
+        Y.append(time[i])
+        Y.append(time[i+1])
+    X.append(Xt[-1])
+    plt.plot(Y, X)
     plt.xlabel('t')
     plt.ylabel('Nombre de clients')
     plt.show()
@@ -70,7 +80,7 @@ def compute_pi(n=N_max):
 
     # To avoid nul solution
     # force last component to be 1
-    A = np.transpose(A) 
+    A = np.transpose(A)
     b = -A[:-1, -1]
     A = A[:-1, :-1]
 
@@ -93,6 +103,31 @@ def estimate_exp_var(x0=0, n=N_max):
     print('Expected variance : {}'.format(expected_var))
 
     return estimated_exp,  estimated_var, expected_exp, expected_var
+
+def indicatrice(a, xt):
+    if a==xt:
+        return 1
+    return 0
+
+def density_Xt(x, t=1000):
+    Xt, time = trajectory(t)
+    s = 0.
+    for i in range(len(Xt)-1):
+        duration = time[i+1] - time[i]
+        s += duration * Xt[i] * indicatrice(Xt[i], x)
+    return s/t
+
+# density_vect = np.vectorize(density_Xt, excluded=['t'])
+
+# def plot_density():
+#     x = np.linspace(0, 10, 100)
+#     y = density_vect(x)
+#     print(y)
+#     plt.plot(x, y)
+#     plt.show()
+
+
+
 
 if __name__ == '__main__':
     print(A)
