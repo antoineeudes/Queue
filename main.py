@@ -7,9 +7,8 @@ from numpy import linalg as LA
 # Parameters
 delta = 0.5
 K = 1
-lbd = 1
-mu = 1
-
+lbd = 1.
+mu = 2.
 T_max = 10
 N_max = 10
 
@@ -58,13 +57,49 @@ def trajectory(T, x0=0):
 A = createA(N_max) 
 
 def plot_Xt(T):
-    Y, X = trajectory(T)
-    plt.plot(X, Y)
+    Xt, time = trajectory(T)
+    X, Y = [], []
+    X.append(Xt[0])
+    Y.append(time[0])
+    Y.append(time[1])
+    for i in range(1, len(Xt)-1):
+        X.append(Xt[i-1])
+        X.append(Xt[i])
+        Y.append(time[i])
+        Y.append(time[i+1])
+    X.append(Xt[-1])
+    plt.plot(Y, X)
     plt.xlabel('t')
     plt.ylabel('Nombre de clients')
     plt.show()
 
 
+def indicatrice(a, xt):
+    if a==xt:
+        return 1
+    return 0
+
+def density_Xt(x, t=1000):
+    Xt, time = trajectory(t)
+    s = 0.
+    for i in range(len(Xt)-1):
+        duration = time[i+1] - time[i]
+        s += duration * Xt[i] * indicatrice(Xt[i], x)
+    return s/t
+
+# density_vect = np.vectorize(density_Xt, excluded=['t'])
+
+# def plot_density():
+#     x = np.linspace(0, 10, 100)
+#     y = density_vect(x)
+#     print(y)
+#     plt.plot(x, y)
+#     plt.show()
+
+
+
+
 if __name__ == '__main__':
     print(A)
-    plot_Xt(10)
+    plot_Xt(10000)
+    # plot_density()
