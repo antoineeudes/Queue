@@ -83,7 +83,14 @@ def compute_pi(n=N_max):
 def estimate_expectancy(x0=0, n=N_max):
     # Xt, time = trajectory(T, x0)
     pi = compute_pi(n=n)
-    return np.vdot(pi, np.arange(n))
+    expectancy = np.vdot(pi, np.arange(n))
+    variance = np.vdot(pi, [(x-expectancy)**2 for x in range(n)])
+
+    print('Estimated expectancy : {}'.format(expectancy))
+    print('Expected expectancy : {}'.format(ro/(1-ro)))
+    print('Estimated variance : {}'.format(variance))
+    print('Expected variance : {}'.format(ro/(1-ro)**2))
+    return expectancy, variance
 
 if __name__ == '__main__':
     print(A)
@@ -91,4 +98,3 @@ if __name__ == '__main__':
     # plot_Xt(Xt)
     print(compute_pi())
     print(estimate_expectancy())
-    print(ro/(1-ro))
