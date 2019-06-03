@@ -7,8 +7,8 @@ from numpy import linalg as LA
 # Parameters
 delta = 0.5
 K = 1
-lbd = 0.7
-mu = 1.
+lbd = 1.
+mu = 1.3
 ro = lbd/mu
 
 T_max = 10
@@ -69,7 +69,7 @@ def plot_Xt(T):
         X.append(Xt[i])
         Y.append(time[i])
         Y.append(time[i+1])
-    X.append(Xt[-1])
+    X.append(Xt[-2])
     plt.plot(Y, X)
     plt.xlabel('t')
     plt.ylabel('Nombre de clients')
@@ -106,31 +106,41 @@ def indicatrice(a, xt):
         return 1
     return 0
 
-def density_Xt(x, t=1000):
+def density_Xt(x, t=100, n=1000):
     Xt, time = trajectory(t)
     s = 0.
-    for i in range(len(Xt)-1):
-        duration = time[i+1] - time[i]
-        s += duration * Xt[i] * indicatrice(Xt[i], x)
-    return s/t
+    for _ in range(n):
+        for i in range(len(Xt)-1):
+            duration = time[i+1] - time[i]
+            s += duration * Xt[i] * indicatrice(Xt[i], x)
+    return s/(n*t)
 
-# density_vect = np.vectorize(density_Xt, excluded=['t'])
+density_vect = np.vectorize(density_Xt, excluded=['t', 'n'])
 
-# def plot_density():
-#     x = np.linspace(0, 10, 100)
-#     y = density_vect(x)
-#     print(y)
-#     plt.plot(x, y)
-#     plt.show()
+def plot_density():
+    x = np.arange(0, 100)
+    y = density_vect(x)
+    print(y)
+    plt.subplot(121)
+    plt.plot(x, y)
+    plt.subplot(122)
+    pi = compute_pi()
+    plt.scatter(np.arange(N_max), pi)
+    plt.show()
 
-
+def plot_pi():
+    pi = compute_pi()
+    plt.scatter(np.arange(30), pi[:30])
+    plt.show()
 
 
 if __name__ == '__main__':
-    print(A)
-    plot_Xt(10)
+    # print(A)
+    plot_Xt(100)
 
     # Xt = trajectory(0, T_max, A)
     # plot_Xt(Xt)
-    print(compute_pi())
-    print(estimate_expectancy())
+    # print(compute_pi())
+    # print(estimate_expectancy())
+    # plot_pi()
+    # plot_density()
