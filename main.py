@@ -45,7 +45,7 @@ def step_trajectory(x):
     return next_state
 
 
-def trajectory(T, x0=0):
+def trajectory(T, x0=0, lbd=lbd, mu=mu):
     Xt = np.array([])
     t = 0
     x = x0
@@ -67,8 +67,8 @@ def trajectory(T, x0=0):
 
 
 
-def plot_Xt(T):
-    Xt, time = trajectory(T)
+def plot_Xt(T, lbd=lbd, mu=mu):
+    Xt, time = trajectory(T, lbd=lbd, mu=mu)
     X, Y = [], []
     X.append(Xt[0])
     Y.append(time[0])
@@ -177,12 +177,18 @@ if __name__ == '__main__':
     # print(A)
     # plot_Xt(10)
     # Xt = trajectory(0, T_max, A)
-    # plot_Xt(Xt)
     # print(compute_pi())
     # print(estimate_exp_var(show=True))
+    
 
+    # QUESTION 1
+    # plot_Xt(T=100)
+    plot_Xt(T=1000, lbd=1, mu=2)
+    plot_Xt(T=1000, lbd=2, mu=1)
+    plot_Xt(T=1000, lbd=1, mu=1)
+    
     # QUESTION 2
-    influence_of_ro_over_estimation()
+    # influence_of_ro_over_estimation()
 
     # QUESTION 4
-    plot_dist_customer_n(20)
+    # plot_dist_customer_n(20)
