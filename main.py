@@ -82,6 +82,7 @@ def plot_Xt(T, lbd=lbd, mu=mu):
     plt.plot(Y, X)
     plt.xlabel('t')
     plt.ylabel('Nombre de clients')
+    plt.title('Nombre de clients en fonction du temps avec lbd={} et mu={}'.format(lbd, mu))
     plt.show()
 
 def compute_pi(n=N_max, lbd=lbd, mu=mu):
@@ -182,7 +183,6 @@ if __name__ == '__main__':
     
 
     # QUESTION 1
-    # plot_Xt(T=100)
     plot_Xt(T=1000, lbd=1, mu=2)
     plot_Xt(T=1000, lbd=2, mu=1)
     plot_Xt(T=1000, lbd=1, mu=1)
