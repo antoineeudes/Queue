@@ -147,17 +147,29 @@ def density_Xt(x, t=1000):
     s = 0.
     for i in range(len(Xt)-1):
         duration = time[i+1] - time[i]
-        s += duration * Xt[i] * indicatrice(Xt[i], x)
+        s += duration * indicatrice(Xt[i], x)
     return s/t
 
 # density_vect = np.vectorize(density_Xt, excluded=['t'])
 
-# def plot_density():
-#     x = np.linspace(0, 10, 100)
-#     y = density_vect(x)
-#     print(y)
-#     plt.plot(x, y)
-#     plt.show()
+def plot_density(T_max=10, N=10):
+    '''
+        Estimate Xt density by Monte Carlo
+    '''
+    X = np.arange(T_max)
+    Y = np.zeros((N, T_max))
+    for n in range(N):
+        for x in X:
+            Y[n, x] = density_Xt(x, t=T_max)
+        print(n)
+    Y_mean = np.mean(Y, axis=0)
+    plt.plot(X, Y_mean, label='Estimated')
+    plt.plot(X, compute_pi(n=T_max), label='Expected')
+    plt.xlabel('Nombre de clients')
+    plt.ylabel('Probabilité')
+    plt.title('Densité du nombre de clients dans la file')
+    plt.legend()
+    plt.show()
 
 
 def plot_dist_customer_n(n, N_max=N_max, lbd=lbd, mu=mu):
@@ -183,12 +195,15 @@ if __name__ == '__main__':
     
 
     # QUESTION 1
-    plot_Xt(T=1000, lbd=1, mu=2)
-    plot_Xt(T=1000, lbd=2, mu=1)
-    plot_Xt(T=1000, lbd=1, mu=1)
+    # plot_Xt(T=1000, lbd=1, mu=2)
+    # plot_Xt(T=1000, lbd=2, mu=1)
+    # plot_Xt(T=1000, lbd=1, mu=1)
     
     # QUESTION 2
     # influence_of_ro_over_estimation()
+
+    # QUESTION 3
+    plot_density(T_max=30, N=300)
 
     # QUESTION 4
     # plot_dist_customer_n(20)
