@@ -86,6 +86,9 @@ def plot_Xt(T, lbd=lbd, mu=mu):
     plt.show()
 
 def compute_pi(n=N_max, lbd=lbd, mu=mu):
+    '''
+        Solve xA=0 where x is normalized
+    '''
     A = createA(n, lbd=lbd, mu=mu)
 
     # To avoid nul solution
@@ -119,8 +122,8 @@ def influence_of_ro_over_estimation():
     error_exp = []
     error_var = []
     ro_list = []
-    for lbd in np.linspace(0.01, 0.99, 30):
-        for mu in np.linspace(0.01, 0.99, 30):
+    for lbd in np.linspace(0.01, 0.99, 50):
+        for mu in np.linspace(0.01, 0.99, 50):
             ro = lbd/mu
             if ro >= 1:
                 continue
@@ -131,10 +134,10 @@ def influence_of_ro_over_estimation():
 
     plt.scatter(ro_list, error_exp, label='Expectancy error', s=20)
     plt.scatter(ro_list, error_var, label='Variance error', s=20)
-    plt.xlabel('ro')
+    plt.xlabel('rho')
     plt.ylabel('Error')
     plt.legend()
-    plt.title('Influence of ro over estimation errors')
+    # plt.title('Influence of ro over estimation errors')
     plt.show()
 
 def indicatrice(a, xt):
@@ -178,12 +181,15 @@ def plot_dist_customer_n(n, N_max=N_max, lbd=lbd, mu=mu):
     dist_0 = np.zeros(N_max)
     dist_0[0] = 1.
 
-    dist_n = np.dot(Pn, dist_0)
+    dist_n = np.dot(dist_0, Pn)
 
-    plt.plot(range(N_max), dist_n)
-    plt.xlabel('Queue length')
-    plt.ylabel('Probability')
-    plt.title('Distribution of the queue length')
+    pi = compute_pi(n=N_max, lbd=lbd, mu=mu)
+    plt.plot(range(N_max), dist_n, label='Xn density')
+    plt.plot(range(N_max), pi, label='pi density')
+    plt.xlabel('Longueur de la file')
+    plt.ylabel('Probabilité')
+    # plt.title('Distribution de la longueur de la file')
+    plt.legend()
     plt.show()
 
 if __name__ == '__main__':
@@ -192,6 +198,16 @@ if __name__ == '__main__':
     # Xt = trajectory(0, T_max, A)
     # print(compute_pi())
     # print(estimate_exp_var(show=True))
+
+    # n = 50
+    # pi = compute_pi(n=n)
+    # print(pi)
+    # X = np.arange(n)
+    # plt.plot(X, pi, c='orange')
+    # plt.xlabel('Nombre de clients')
+    # plt.ylabel('Probabilité')
+    # # plt.title('Densité de la probabilité invariante pi')
+    # plt.show()
     
 
     # QUESTION 1
@@ -200,10 +216,11 @@ if __name__ == '__main__':
     # plot_Xt(T=1000, lbd=1, mu=1)
     
     # QUESTION 2
+    # print(estimate_exp_var(show=True))
     # influence_of_ro_over_estimation()
 
     # QUESTION 3
-    plot_density(T_max=30, N=300)
+    # plot_density(T_max=30, N=300)
 
     # QUESTION 4
-    # plot_dist_customer_n(20)
+    plot_dist_customer_n(100, N_max=50)
