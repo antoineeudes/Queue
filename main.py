@@ -81,7 +81,7 @@ def plot_Xt(T, lbd=lbd, mu=mu):
         X.append(Xt[i])
         Y.append(time[i])
         Y.append(time[i+1])
-    X.append(Xt[-1])
+    X.append(Xt[-2])
     plt.plot(Y, X)
     plt.xlabel('t')
     plt.ylabel('Nombre de clients')
@@ -163,7 +163,7 @@ def indicatrice(a, xt):
         return 1
     return 0
 
-def density_Xt(x, t=1000):
+def density_Xt(x, t=100, n=1000):
     Xt, time = trajectory(t)
     s = 0.
     for i in range(len(Xt)-1):
